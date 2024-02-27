@@ -1,6 +1,9 @@
 package process
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 func crud(str []string) { //expectation is that the incoming command must be SET,GET, OR DEL
 	if str[0] == "SET" {
@@ -12,12 +15,15 @@ func crud(str []string) { //expectation is that the incoming command must be SET
 	}
 }
 
-func op_set(str []string) {
+func op_set(str []string) { //SET operation implementation, assumption all input correct
 	k := str[1]
 	v := str[2]
-	temp_v, err := strconv.Atoi(v)
+	temp_v, err := strconv.ParseFloat(v, 64)
 	if err != nil {
-		//it means we have a string and we can go ahead with stripping the quotes if any and go ahead and put it in string map
-		map[k]
+		//it means we have a float64 and we can assign it to Map_int
+		Map_int[k] = temp_v
+		return
 	}
+	//now the remaining can only be the string value so adding it in Map_string
+	Map_string[k] = strings.Trim(v, "\"")
 }
