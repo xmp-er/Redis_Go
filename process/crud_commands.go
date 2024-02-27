@@ -1,8 +1,6 @@
-package process
+package main
 
 import (
-	"fmt"
-	"strconv"
 	"strings"
 )
 
@@ -22,38 +20,30 @@ func crud(str []string) string { //expectation is that the incoming command must
 
 func op_set(str []string) string { //SET operation implementation, assumption all input correct
 	k := str[1]
-	v := str[2]
-	temp_v, err := strconv.ParseFloat(v, 64)
-	if err != nil {
-		//it means we have a float64 and we can assign it to Map_int
-		Map_int[k] = temp_v
-		return "1"
+	var v string = ""
+	for ind, i := range str[2:] { //logic to remove the quotes and retain the spaces
+		v += (strings.Trim(i, "\"'"))
+		if ind != (len(str) - 1 - 2) {
+			v += " "
+		}
 	}
-	//now the remaining can only be the string value so adding it in Map_string
-	Map_string[k] = strings.Trim(v, "\"")
-	return "1"
+	Map[k] = v
+	return "OK"
 }
 
 func op_get(str []string) string { //GET implementation, assuming the input to be correct
 	k := str[1]
-	if _, ok := Map_string[k]; !ok {
-		return fmt.Sprintf("%f", Map_int[k])
+	if _, ok := Map[k]; ok {
+		return `"` + Map[k] + `"`
 	}
-	if _, ok := Map_string[k]; !ok {
-		return fmt.Sprintf("%f", Map_int[k])
-	}
-	return "0"
+	return "nil"
 }
 
 func op_del(str []string) string { //DEL implementation, assuming input to be correct
 	k := str[1]
-	if _, ok := Map_string[k]; ok {
-		delete(Map_string, k)
-		return "1"
+	if _, ok := Map[k]; ok {
+		delete(Map, k)
+		return "(integer) 1"
 	}
-	if _, ok := Map_int[k]; ok {
-		delete(Map_int, k)
-		return "1"
-	}
-	return "0"
+	return "(integer) 0"
 }

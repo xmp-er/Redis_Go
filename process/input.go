@@ -1,8 +1,21 @@
-package process
+package main
 
-var Map_string = make(map[string]string)
-var Map_int = make(map[string]float64)
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+)
+
+var Map = make(map[string]string)
 
 func main() {
-
+	for {
+		var str string = ""
+		scanner := bufio.NewScanner(os.Stdin) //validate the input pending
+		scanner.Scan()
+		str = scanner.Text()
+		res := crud(strings.Split(str, " "))
+		fmt.Println(res)
+	}
 }
