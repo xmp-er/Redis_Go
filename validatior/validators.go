@@ -18,6 +18,9 @@ func Validate_input(str string) (bool, error) {
 			return false, errors.New("(error) ERR syntax error")
 		}
 	case "SET":
+		if !Is_set_valid(s) {
+			return false, errors.New("(error) ERR syntax error")
+		}
 	}
 
 	return true, nil
@@ -34,4 +37,14 @@ func Is_Valid_Command(str string) bool { //checks if the command part is valid o
 
 func Is_Two_Args(str []string) bool {
 	return len(str) == 2
+}
+
+func Is_set_valid(str []string) bool {
+	l := str[len(str)-1]
+	if len(str) > 2 {
+		if str[3][0] != '"' && str[len(str)-1][len(l)-1] != '"' {
+			return false
+		}
+	}
+	return true
 }
