@@ -22,6 +22,7 @@ func main() {
 		_, err := validatior.Validate_input(str)
 		if err != nil {
 			fmt.Println(err)
+			continue
 		}
 
 		//splitting the string into array
