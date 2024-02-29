@@ -37,8 +37,12 @@ func main() {
 			res = crud(st)
 		case "INCR", "INCRBY":
 			res = incr_cmds(st)
+		case "MULTI": //taking Multi as we will be operating from the function after we get all these cmds
+			res = transactional_cmds(st)
 		}
 
-		fmt.Println(res)
+		if res != "" {
+			fmt.Println(res)
+		}
 	}
 }
