@@ -2,6 +2,7 @@ package validatior
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 )
 
@@ -13,7 +14,7 @@ func Validate_input(str string) (bool, error) {
 	//if SET command and spaces then all the following must be enclosed in Quotes if spaces
 	//if GET or DEL command, then there must be only two elements in splitted string
 	switch s[0] {
-	case "GET", "DEL":
+	case "GET", "DEL", "INCR", "INCRBY":
 		if !Is_Two_Args(s) {
 			return false, errors.New("(error) ERR syntax error")
 		}
@@ -47,4 +48,12 @@ func Is_set_valid(str []string) bool {
 		}
 	}
 	return true
+}
+
+func Is_Val_Integer(v string) error {
+	_, err := strconv.Atoi(v)
+	if err != nil {
+		return errors.New("(error) ERR value is not an integer or out of range")
+	}
+	return nil
 }

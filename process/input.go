@@ -24,7 +24,20 @@ func main() {
 			fmt.Println(err)
 		}
 
-		res := crud(strings.Split(str, " "))
+		//splitting the string into array
+		st := strings.Split(str, " ")
+
+		//string holding our final result
+		var res string = ""
+
+		//if the command is GET,SET or DEL, we handle it via the crud_commands handler
+		switch st[0] {
+		case "SET", "GET", "DEL":
+			res = crud(st)
+		case "INCR", "INCRBY":
+			res = incr_cmds(st)
+		}
+
 		fmt.Println(res)
 	}
 }
