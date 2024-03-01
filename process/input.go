@@ -10,6 +10,7 @@ import (
 )
 
 var Map = make(map[string]string)
+var Backup_Map = make(map[string]string)
 
 func main() {
 	for {
@@ -42,7 +43,6 @@ func main() {
 		case "COMPACT":
 			res = additional_commands(st)
 		}
-
 		if res != "" {
 			fmt.Println(res)
 		}

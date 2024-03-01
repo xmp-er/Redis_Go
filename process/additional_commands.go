@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func additional_commands(st []string) string {
 	//if our map is empty then the final command resulted in empty value and we can return nil
@@ -12,11 +15,19 @@ func additional_commands(st []string) string {
 	index := 0
 	for k, v := range Map {
 		index++
-		if index == len(Map) { //avoiding formatting error
-			res += (fmt.Sprintf("%s %s %s", "SET", k, v))
+		_, err := strconv.Atoi(v) // if the key is not a integer then not considered
+		if err != nil {
 			continue
 		}
-		res += (fmt.Sprintf("%s %s %s\n", "SET", k, v))
+		if Backup_Map[k] == Map[k] { // since we are only adding the key once in BackupMap, if the key was incremented then BackupMap and Map will have different vals for same key
+			continue
+		}
+		fmt.Println(index)
+		if index == len(Map)-1 { //avoiding formatting error
+			res += (fmt.Sprintf("%s %s %s", "SET", k, v))
+		} else {
+			res += (fmt.Sprintf("%s %s %s\n", "SET", k, v))
+		}
 	}
 	return res
 }

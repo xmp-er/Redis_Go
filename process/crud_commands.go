@@ -28,6 +28,7 @@ func op_set(str []string) string { //SET operation implementation, assumption al
 		}
 	}
 	Map[k] = v
+	Backup_Map[k] = v
 	return "OK"
 }
 
@@ -43,6 +44,7 @@ func op_del(str []string) string { //DEL implementation, assuming input to be co
 	k := str[1]
 	if _, ok := Map[k]; ok {
 		delete(Map, k)
+		delete(Backup_Map, k)
 		return "(integer) 1"
 	}
 	return "(integer) 0"
