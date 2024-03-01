@@ -39,6 +39,8 @@ func main() {
 			res = incr_cmds(st)
 		case "MULTI": //taking Multi as we will be operating from the function after we get all these cmds
 			res = transactional_cmds(st)
+		case "COMPACT":
+			res = additional_commands(st)
 		}
 
 		if res != "" {

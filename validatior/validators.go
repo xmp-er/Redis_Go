@@ -22,7 +22,7 @@ func Validate_input(str string) (bool, error) {
 		if !Is_set_valid(s) {
 			return false, errors.New("(error) ERR syntax error")
 		}
-	case "MULTI", "EXEC", "DISCARD":
+	case "MULTI", "EXEC", "DISCARD", "COMPACT":
 		if !Is_One_Args(s) {
 			return false, errors.New("(error) ERR syntax error")
 		}
@@ -33,7 +33,7 @@ func Validate_input(str string) (bool, error) {
 
 func Is_Valid_Command(str string) bool { //checks if the command part is valid or not
 	switch str {
-	case "GET", "SET", "DEL", "INCR", "INCRBY", "MULTI", "EXEC", "DISCARD": //if command is of type GET,SET or DEl,INCR,INCRBY,MULTI,EXEC,DISCARD valid else not
+	case "GET", "SET", "DEL", "INCR", "INCRBY", "MULTI", "EXEC", "DISCARD", "COMPACT": //if command is of type GET,SET or DEl,INCR,INCRBY,MULTI,EXEC,DISCARD valid else not
 		return true
 	default:
 		return false
