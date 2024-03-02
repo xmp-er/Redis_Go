@@ -12,6 +12,8 @@ import (
 	"sync"
 	"syscall"
 
+	"github.com/joho/godotenv"
+
 	"github.com/xmp-er/Redis_Go/helper"
 	"github.com/xmp-er/Redis_Go/validatior"
 )
@@ -21,8 +23,14 @@ var Backup_Maps [16]map[string]string
 
 func main() {
 
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	default_port := os.Getenv("PORT")
+
 	var port string //taking port as flag
-	flag.StringVar(&port, "p", ":8000", "Port number on which the TCP Server will be exposed")
+	flag.StringVar(&port, "p", default_port, "Port number on which the TCP Server will be exposed")
 	flag.Parse()
 
 	if !validatior.Is_Valid_Port(port) { //validating port
