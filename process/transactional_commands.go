@@ -9,7 +9,7 @@ import (
 	"github.com/xmp-er/Redis_Go/validatior"
 )
 
-func transactional_cmds(s []string) string {
+func transactional_cmds(s []string, Map map[string]string, Backup_Map map[string]string) string {
 	//we are taking only MULTI from this
 
 	fmt.Println("OK") //inital ok
@@ -46,11 +46,11 @@ func transactional_cmds(s []string) string {
 		st := strings.Split(cmd, " ")
 		switch st[0] {
 		case "SET", "GET", "DEL":
-			res = crud(st)
+			res = crud(st, Map, Backup_Map)
 		case "INCR", "INCRBY":
-			res = incr_cmds(st)
+			res = incr_cmds(st, Map, Backup_Map)
 		case "MULTI": //recursive MULTI Function maybe
-			res = transactional_cmds(st)
+			res = transactional_cmds(st, Map, Backup_Map)
 		}
 		fmt.Println(i+1, ")", res)
 	}

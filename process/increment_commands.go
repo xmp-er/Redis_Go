@@ -7,7 +7,7 @@ import (
 	"github.com/xmp-er/Redis_Go/validatior"
 )
 
-func incr_cmds(s []string) string {
+func incr_cmds(s []string, Map map[string]string, Backup_Map map[string]string) string {
 
 	//performing operations based on command
 	switch s[0] {
@@ -15,7 +15,7 @@ func incr_cmds(s []string) string {
 		k := s[1]
 		//checking if the value exists,if does not then we make a key by value 1
 		if _, ok := Map[k]; !ok {
-			op_set([]string{"SET", k, "1"})
+			op_set([]string{"SET", k, "1"}, Map, Backup_Map)
 		}
 		//checking if the key's value is Integer
 		err := validatior.Is_Val_Integer(k)
@@ -39,7 +39,7 @@ func incr_cmds(s []string) string {
 		}
 		//if key dne then set value provided
 		if _, ok := Map[k]; !ok {
-			op_set([]string{"SET", k, v})
+			op_set([]string{"SET", k, v}, Map, Backup_Map)
 		}
 		//if key exists then if value is integer then proceeding else error
 		temp, err := strconv.Atoi(Map[k])

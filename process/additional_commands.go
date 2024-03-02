@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func additional_commands(st []string) string {
+func additional_commands(st []string, Map map[string]string, Backup_Map map[string]string) string {
 	//if our map is empty then the final command resulted in empty value and we can return nil
 	if len(Map) == 0 {
 		return "(nil)"

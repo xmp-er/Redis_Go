@@ -26,6 +26,16 @@ func Validate_input(str string) (bool, error) {
 		if !Is_One_Args(s) {
 			return false, errors.New("(error) ERR syntax error")
 		}
+	case "SELECT":
+		if !Is_Two_Args(s) {
+			return false, errors.New("(error) ERR syntax error")
+		}
+		if !is_DB_Range_Integer(s) {
+			return false, errors.New("(error) ERR value is not an integer or out of range")
+		}
+		if !is_DB_Range_Valid(s) {
+			return false, errors.New("(error) ERR DB index is out of range")
+		}
 	}
 
 	return true, nil
@@ -33,7 +43,7 @@ func Validate_input(str string) (bool, error) {
 
 func Is_Valid_Command(str string) bool { //checks if the command part is valid or not
 	switch str {
-	case "GET", "SET", "DEL", "INCR", "INCRBY", "MULTI", "EXEC", "DISCARD", "COMPACT", "DISCONNECT": //if command is of type GET,SET or DEl,INCR,INCRBY,MULTI,EXEC,DISCARD and others valid else not
+	case "GET", "SET", "DEL", "INCR", "INCRBY", "MULTI", "EXEC", "DISCARD", "COMPACT", "DISCONNECT", "SELECT": //if command is of type GET,SET or DEl,INCR,INCRBY,MULTI,EXEC,DISCARD and others valid else not
 		return true
 	default:
 		return false
@@ -72,4 +82,21 @@ func Is_Valid_Port(s string) bool {
 	}
 	_, err := strconv.Atoi(s[1:])
 	return err == nil
+}
+
+func is_DB_Range_Integer(s []string) bool {
+	_, err := strconv.Atoi(s[1])
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func is_DB_Range_Valid(s []string) bool {
+	v, _ := strconv.Atoi(s[1])
+
+	if v < 0 || v > 15 {
+		return false
+	}
+	return true
 }
