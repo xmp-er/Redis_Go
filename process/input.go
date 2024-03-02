@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"strings"
+	"sync"
 	"syscall"
 
 	"github.com/xmp-er/Redis_Go/validatior"
@@ -31,7 +33,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	sigTermUser := make(chan os.Signal, 1)
+	sigTermUser := make(chan os.Signal, 1) //implementing graceful shutdown
+	var wg sync.WaitGroup
+	ctxShutdown, cancel := context.WithCancel(context.Background())
 
 	signal.Notify(sigTermUser, os.Interrupt, syscall.SIGTERM)
 
@@ -41,14 +45,16 @@ func main() {
 			select {
 			case <-sigTermUser:
 				sigTermUser <- os.Kill
-				fmt.Println(1)
+				cancel()
 				return
 			default:
+				wg.Add(1)
 				go func() {
+					defer wg.Done()
 					if err != nil {
 						log.Fatal(err)
 					}
-					process(connection)
+					process(ctxShutdown, connection)
 					connection.Close()
 				}()
 			}
@@ -59,60 +65,66 @@ func main() {
 	listener.Close() //closing the listener once its done
 }
 
-func process(conn net.Conn) {
+func process(ctx context.Context, conn net.Conn) {
 	for {
-		temp_inp := make([]byte, 8192)
-		n, err := conn.Read(temp_inp) //reading the input and taking it to string
-		// conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\nConnection established and response recieved\r\n")))
+		select {
+		case <-ctx.Done():
+			goto end
+		default:
+			temp_inp := make([]byte, 8192)
+			n, err := conn.Read(temp_inp) //reading the input and taking it to string
+			// conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\nConnection established and response recieved\r\n")))
 
-		if err != nil {
-			fmt.Println(err)
-			conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\n %s \r\n", err.Error())))
-			break
-		}
+			if err != nil {
+				fmt.Println(err)
+				conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\n %s \r\n", err.Error())))
+				goto end
+			}
 
-		str := string(temp_inp[:n]) //processing begins
+			str := string(temp_inp[:n]) //processing begins
 
-		str = strings.TrimSpace(str)
+			str = strings.TrimSpace(str)
 
-		temp_str := strings.Split(str, "\n") //the relevant data part is on the last line
+			temp_str := strings.Split(str, "\n") //the relevant data part is on the last line
 
-		str = temp_str[len(temp_str)-1]
-		str = strings.TrimSpace(str)
+			str = temp_str[len(temp_str)-1]
+			str = strings.TrimSpace(str)
 
-		//checking if the input is correct
-		_, err = validatior.Validate_input(str)
-		if err != nil {
-			temp_err := err.Error()
-			conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\n %s \r\n", temp_err)))
-			fmt.Println(temp_err)
-			break
-		}
-		//splitting the string into array
-		st := strings.Split(str, " ")
+			//checking if the input is correct
+			_, err = validatior.Validate_input(str)
+			if err != nil {
+				temp_err := err.Error()
+				conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\n %s \r\n", temp_err)))
+				fmt.Println(temp_err)
+				goto end
+			}
+			//splitting the string into array
+			st := strings.Split(str, " ")
 
-		//string holding our final result
-		var res string = ""
+			//string holding our final result
+			var res string = ""
 
-		//if the command is GET,SET or DEL, we handle it via the crud_commands handler
-		switch st[0] {
-		case "SET", "GET", "DEL":
-			res = crud(st)
-		case "INCR", "INCRBY":
-			res = incr_cmds(st)
-		case "MULTI": //taking Multi as we will be operating from the function after we get all these cmds
-			res = transactional_cmds(st)
-		case "COMPACT":
-			res = additional_commands(st)
-		case "DISCONNECT":
-			conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\n %s \r\n", "Closing connection")))
-			conn.Close()
-			return
-		}
-		if res != "" {
-			fmt.Println(res)
-			conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\n %s \r\n", res)))
+			//if the command is GET,SET or DEL, we handle it via the crud_commands handler
+			switch st[0] {
+			case "SET", "GET", "DEL":
+				res = crud(st)
+			case "INCR", "INCRBY":
+				res = incr_cmds(st)
+			case "MULTI": //taking Multi as we will be operating from the function after we get all these cmds
+				res = transactional_cmds(st)
+			case "COMPACT":
+				res = additional_commands(st)
+			case "DISCONNECT":
+				conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\n %s \r\n", "Closing connection")))
+				conn.Close()
+				return
+			}
+			if res != "" {
+				fmt.Println(res)
+				conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\n %s \r\n", res)))
+			}
 		}
 	}
+end:
 	conn.Close() //closing the connection once the processing is done
 }
