@@ -1,10 +1,22 @@
+# Index
+ - [REDIS 0.1 EXPOSED VIA TCP SERVER IN GO](#redis-1-exposed-via-tcp-server-in-go)
+   - [How to Run and Hit Server](#how-to-run-and-hit-server)
+   - [Commands](#commands)
+   - [Database structure](#database-structure)
+   - [DISCONNECT CONNECTION](#disconnect-connection)
+   - [Demonstration of application](#demonstration-of-application)
+
 # REDIS 0.1 EXPOSED VIA TCP SERVER IN GO
+[Index](#index)
+ 
 
 Redis 0.1 build entirely on Go exposed via TCP server with in-memory storage
 
 The program will accept DB commands as inputs from the command line from client connection and process them by creating DB structures in memory. The output will be displayed on the standard output stream and to the client with connection
 
 ## How to Run and Hit Server
+[Index](#index)
+ 
 
  - To run locally, clone and use `go run ./process` to run the program as the main file resides in process folder
 
@@ -15,6 +27,8 @@ For custom port, it can be passed as a flag varaible as `go run ./process -p :<c
 
 
 ## Commands
+[Index](#index)
+ 
 
 the basic features of Redis 0.1 are implemented such as
 
@@ -36,17 +50,26 @@ Some additional commands implemented are
  - `COMPACT` shows the final SET value of a key, if the value was a integer.
 
 ## Database structure
+[Index](#index)
+ 
 
 <b><u>Redis has databses indexed 0-15</u></b>, post connection establishment we will have to select the database to operate on, these databases can be accessed via any of the connection, new or established, and values can be modified accordingly.
 
  - `SELECT <db_number>` selects datbase ranged from 0-15 based on the number provided
 
 ## DISCONNECT CONNECTION
+[Index](#index)
+ 
 
 To terminate a already established connection, `DISCONNECT` command can be used which will terminate the connection from client-side.
 
 ## Demonstration of application
+[Index](#index)
+ 
 
 A video demonstration of the application with all the commands over multiple TCP connections communication with the same in-memory database at the same time can be found attached.
 
-![](Redis_0.1_Go_Demo.mkv)
+
+https://github.com/xmp-er/Redis_Go/assets/107166230/90917aaa-f8f2-41e3-9659-3c857e9073f8
+
+
