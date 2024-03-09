@@ -22,7 +22,6 @@ func additional_commands(st []string, Map map[string]string, Backup_Map map[stri
 		if Backup_Map[k] == Map[k] { // since we are only adding the key once in BackupMap, if the key was incremented then BackupMap and Map will have different vals for same key
 			continue
 		}
-		fmt.Println("AAAAAAAAAAAAAa")
 		if index == len(Map)-1 { //avoiding formatting error
 			res += (fmt.Sprintf("%s %s %s\n", "SET", k, v))
 		} else {
