@@ -70,6 +70,9 @@ To terminate a already established connection, `DISCONNECT` command can be used 
 A video demonstration of the application with all the commands over multiple TCP connections communication with the same in-memory database at the same time can be found attached.
 
 
-https://github.com/xmp-er/Redis_Go/assets/107166230/90917aaa-f8f2-41e3-9659-3c857e9073f8
+
+https://github.com/xmp-er/Redis_Go/assets/107166230/5a11aec7-cfe0-4e5a-b951-80fb36c33942
+
+
 
 
