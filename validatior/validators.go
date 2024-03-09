@@ -18,8 +18,12 @@ func Validate_input(str string) (bool, error) {
 		if !Is_Two_Args(s) {
 			return false, errors.New("(error) ERR syntax error")
 		}
-	case "SET", "INCRBY":
+	case "SET":
 		if !Is_set_valid(s) {
+			return false, errors.New("(error) ERR syntax error")
+		}
+	case "INCRBY":
+		if !Is_Three_Args(s) {
 			return false, errors.New("(error) ERR syntax error")
 		}
 	case "MULTI", "EXEC", "DISCARD", "COMPACT", "DISCONNECT":
@@ -86,10 +90,7 @@ func Is_Valid_Port(s string) bool {
 
 func is_DB_Range_Integer(s []string) bool {
 	_, err := strconv.Atoi(s[1])
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 func is_DB_Range_Valid(s []string) bool {
@@ -99,4 +100,8 @@ func is_DB_Range_Valid(s []string) bool {
 		return false
 	}
 	return true
+}
+
+func Is_Three_Args(str []string) bool {
+	return len(str) == 3
 }
