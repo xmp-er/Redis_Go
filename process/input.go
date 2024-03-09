@@ -88,24 +88,11 @@ func process(ctx context.Context, conn net.Conn) {
 		case <-ctx.Done():
 			goto end
 		default:
-			temp_inp := make([]byte, 8192)
-			n, err := conn.Read(temp_inp) //reading the input and taking it to string
 
+			str, err := read_connection_input(conn)
 			if err != nil {
-				fmt.Println(err)
-				conn.Write([]byte(fmt.Sprintf("%s\n", err.Error())))
 				continue
 			}
-
-			str := string(temp_inp[:n]) //processing begins
-
-			str = strings.TrimSpace(str)
-
-			temp_str := strings.Split(str, "\n") //the relevant data part is on the last line
-
-			str = temp_str[len(temp_str)-1]
-			str = strings.TrimSpace(str)
-
 			//checking if the input is correct
 			_, err = validatior.Validate_input(str)
 			if err != nil {
@@ -134,7 +121,7 @@ func process(ctx context.Context, conn net.Conn) {
 			case "INCR", "INCRBY":
 				res = incr_cmds(st, Maps[db], Backup_Maps[db])
 			case "MULTI": //taking Multi as we will be operating from the function after we get all these cmds
-				res = transactional_cmds(st, Maps[db], Backup_Maps[db])
+				res = transactional_cmds(st, Maps[db], Backup_Maps[db], conn)
 			case "COMPACT":
 				res = additional_commands(st, Maps[db], Backup_Maps[db])
 			case "DISCONNECT":
@@ -150,4 +137,25 @@ func process(ctx context.Context, conn net.Conn) {
 	}
 end:
 	conn.Close() //closing the connection once the processing is done
+}
+
+func read_connection_input(conn net.Conn) (string, error) {
+	temp_inp := make([]byte, 8192)
+	n, err := conn.Read(temp_inp) //reading the input and taking it to string
+
+	if err != nil {
+		fmt.Println(err)
+		conn.Write([]byte(fmt.Sprintf("%s\n", err.Error())))
+		return "", err
+	}
+
+	str := string(temp_inp[:n]) //processing begins
+
+	str = strings.TrimSpace(str)
+
+	temp_str := strings.Split(str, "\n") //the relevant data part is on the last line
+
+	str = temp_str[len(temp_str)-1]
+
+	return strings.TrimSpace(str), nil
 }
