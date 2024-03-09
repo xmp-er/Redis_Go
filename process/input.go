@@ -90,7 +90,6 @@ func process(ctx context.Context, conn net.Conn) {
 		default:
 			temp_inp := make([]byte, 8192)
 			n, err := conn.Read(temp_inp) //reading the input and taking it to string
-			// conn.Write([]byte(fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\nConnection established and response recieved\r\n")))
 
 			if err != nil {
 				fmt.Println(err)

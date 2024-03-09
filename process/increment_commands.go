@@ -18,7 +18,7 @@ func incr_cmds(s []string, Map map[string]string, Backup_Map map[string]string) 
 			op_set([]string{"SET", k, "1"}, Map, Backup_Map)
 		}
 		//checking if the key's value is Integer
-		err := validatior.Is_Val_Integer(k)
+		err := validatior.Is_Val_Integer(Map[k])
 		if err != nil {
 			return err.Error()
 		}
@@ -33,7 +33,7 @@ func incr_cmds(s []string, Map map[string]string, Backup_Map map[string]string) 
 		k := s[1]
 		v := s[2]
 		//checking if the second value is integer or not
-		err := validatior.Is_Val_Integer(v)
+		err := validatior.Is_Val_Integer(Map[k])
 		if err != nil {
 			return err.Error()
 		}
