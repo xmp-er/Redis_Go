@@ -1,78 +1,48 @@
-# Index
- - [REDIS 0.1 EXPOSED VIA TCP SERVER IN GO](#redis-1-exposed-via-tcp-server-in-go)
-   - [How to Run and Hit Server](#how-to-run-and-hit-server)
-   - [Commands](#commands)
-   - [Database structure](#database-structure)
-   - [DISCONNECT CONNECTION](#disconnect-connection)
-   - [Demonstration of application](#demonstration-of-application)
+# Redis 0.1 Exposed via TCP Server in Go
 
-# REDIS 0.1 EXPOSED VIA TCP SERVER IN GO
-[Index](#index)
- 
+**Redis 0.1**, entirely built in Go and exposed via a **TCP server**, features **in-memory storage** capabilities. The program accepts database commands from the client connections and processes them, creating **in-memory database structures**. The output is then displayed both on the standard output stream and to the connected clients.
 
-Redis 0.1 build entirely on Go exposed via TCP server with in-memory storage
+## How to Run and Connect to the Server
 
-The program will accept DB commands as inputs from the command line from client connection and process them by creating DB structures in memory. The output will be displayed on the standard output stream and to the client with connection
+- Clone the repository and run the program using `go run ./process` from the 'process' folder.
+- Connect to the default server at **port 8000** using `telnet localhost 8000`.
+- For a custom port, use the following command: `go run ./process -p :<custom_port>`.
 
-## How to Run and Hit Server
-[Index](#index)
- 
+## Supported Commands
 
- - To run locally, clone and use `go run ./process` to run the program as the main file resides in process folder
+**Redis 0.1** supports basic **CRUD** commands:
 
- - The default server is 8000, it can be hit via telnet as `telnet localhost 8000`
+- **`SET <k> <v>`**: Set the key to a specified value.
+- **`GET <k>`**: Retrieve the value of a previously set key.
+- **`DELETE <k>`**: Delete a key.
 
-For custom port, it can be passed as a flag varaible as `go run ./process -p :<custom_port>`
+Arithmetic operation commands include:
 
+- **`INCR <k>`**: Increment the value of a specified key by 1 (if it's an integer).
+- **`INCRBY <k> <v>`**: Increment the value of a specified key by v (if it's an integer).
 
+Commands for executing multiple instructions at once:
 
-## Commands
-[Index](#index)
- 
+- **`MULTI`**: Start queuing commands.
+- **`EXEC`**: Execute the queued commands.
+- **`DISCARD`**: Discard the queued commands.
 
-the basic features of Redis 0.1 are implemented such as
+Additional commands:
 
- - `SET <k> <v>` to set the key to a certain value
- - `GET <k>` to get value of a key that has been set
- - `DELETE <k>` to delete a key
+- **`COMPACT`**: Display the final **SET value** of a key if the value was an integer.
 
-Apart from basic crud commands, arithmetic operation commands are also added as 
+## Database Structure
 
- - `INCR <k>` increments value of specified key by 1 if the value is integer
- - `INCRBY <k> <v>` increments value of specified key by v if the value is integer
+**Redis** features databases indexed from **0 to 15**. After connection establishment, select a database to operate on using:
 
-Commands to execute mass instructions at once have been added such as 
- - `MULTI` starts queueing the commands 
- - `EXEC` executes the queued commands
- - `DISCARD` discards the queued commands
+- **`SELECT <db_number>`**: Select a database ranging from 0 to 15 based on the provided number.
 
-Some additional commands implemented are
- - `COMPACT` shows the final SET value of a key, if the value was a integer.
+## Disconnecting from the Server
 
-## Database structure
-[Index](#index)
- 
+To terminate an established connection, use the **`DISCONNECT`** command, which will terminate the connection from the client-side.
 
-<b><u>Redis has databses indexed 0-15</u></b>, post connection establishment we will have to select the database to operate on, these databases can be accessed via any of the connection, new or established, and values can be modified accordingly.
+## Demonstration Video
 
- - `SELECT <db_number>` selects datbase ranged from 0-15 based on the number provided
-
-## DISCONNECT CONNECTION
-[Index](#index)
- 
-
-To terminate a already established connection, `DISCONNECT` command can be used which will terminate the connection from client-side.
-
-## Demonstration of application
-[Index](#index)
- 
-
-A video demonstration of the application with all the commands over multiple TCP connections communication with the same in-memory database at the same time can be found attached.
-
-
+A video demonstrating the application, showcasing various commands executed over multiple **TCP connections** communicating with the same **in-memory database** simultaneously, can be found [here](https://github.com/xmp-er/Redis_Go/assets/107166230/5a11aec7-cfe0-4e5a-b951-80fb36c33942).
 
 https://github.com/xmp-er/Redis_Go/assets/107166230/5a11aec7-cfe0-4e5a-b951-80fb36c33942
-
-
-
-
