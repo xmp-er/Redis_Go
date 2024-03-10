@@ -1,5 +1,6 @@
 
-![Untitled](https://github.com/xmp-er/Redis_Go/assets/107166230/e2c9a9e9-beaa-4025-8467-93a532be742d)
+![sd](https://github.com/xmp-er/Redis_Go/assets/107166230/ce01c2ea-cdab-4017-b3c3-1c1c544c0690)
+
 
 # REDIS 0.1 EXPOSED VIA TCP SERVER IN GO
  - [Introduction](#introduction)
