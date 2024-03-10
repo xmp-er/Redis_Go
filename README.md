@@ -34,7 +34,7 @@
 Arithmetic operation commands include:
 
 - **`INCR <k>`**: Increment the value of a specified key by 1 (if it's an integer), sets new key with default value of "1" if key not present.
-- **`INCRBY <k> <v>`**: Increment the value of a specified key by v (if it's an integer), sets new key with default value of value provided if key not present.
+- **`INCRBY <k> <v>`**: Increment the value of a specified key by v (if it's an integer), gives error if key not present.
 
 Commands for executing multiple instructions at once:
 
