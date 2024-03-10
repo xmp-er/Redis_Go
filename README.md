@@ -27,14 +27,14 @@
 
 **Redis 0.1** supports basic **CRUD** commands:
 
-- **`SET <k> <v>`**: Set the key to a specified value.
+- **`SET <k> <v>`**: Set the key to a specified value, if the value, has spaces, then it must be enclsed in quotes as `SET sample_key "spaced value"`.
 - **`GET <k>`**: Retrieve the value of a previously set key.
-- **`DELETE <k>`**: Delete a key.
+- **`DELETE <k>`**: Delete a key if present.
 
 Arithmetic operation commands include:
 
-- **`INCR <k>`**: Increment the value of a specified key by 1 (if it's an integer).
-- **`INCRBY <k> <v>`**: Increment the value of a specified key by v (if it's an integer).
+- **`INCR <k>`**: Increment the value of a specified key by 1 (if it's an integer), sets new key with default value of "1" if key not present.
+- **`INCRBY <k> <v>`**: Increment the value of a specified key by v (if it's an integer), sets new key with default value of value provided if key not present.
 
 Commands for executing multiple instructions at once:
 
